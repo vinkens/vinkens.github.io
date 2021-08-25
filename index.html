@@ -152,6 +152,121 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/25/Unity%E6%8E%A5%E5%85%A5Mopub-Firebase-FacebookAnalytics-iOS-Android%E5%9D%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="尽量不秃头的凯文">
+      <meta itemprop="description" content="种一棵树最好的时间是十年前，其次是现在。重在不辍">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kelvin's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/25/Unity%E6%8E%A5%E5%85%A5Mopub-Firebase-FacebookAnalytics-iOS-Android%E5%9D%91/" class="post-title-link" itemprop="url">Unity接入Mopub+Firebase+FacebookAnalytics-iOS/Android坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-25 22:24:37 / 修改时间：23:44:54" itemprop="dateCreated datePublished" datetime="2021-08-25T22:24:37+08:00">2021-08-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="安卓构建问题"><a href="#安卓构建问题" class="headerlink" title="安卓构建问题"></a>安卓构建问题</h2><h3 id="Custom-Gradle-Properties"><a href="#Custom-Gradle-Properties" class="headerlink" title="Custom Gradle Properties"></a>Custom Gradle Properties</h3><ul>
+<li>Mopub官网提醒需要在Unity2020及以上版本构建前加入<code>android.useAndroid=true</code>和<code>android.enabledDexinArtifacTransform=false</code>，这两条加在Gradle Properties原有内容之下即可。</li>
+<li>在PlayerSettings-&gt;Publishing中启用Custom Gradle Properties。</li>
+<li>测试时发现即使是Unity2019也要加入上两条配置，否则构建报错。对此Mopub的解释是其实无关Unity版本，只要你的Gradle构建工具版本大于3.5.0都要加。</li>
+</ul>
+<h3 id="Custom-Main-Gradle"><a href="#Custom-Main-Gradle" class="headerlink" title="Custom Main Gradle"></a>Custom Main Gradle</h3><ul>
+<li><p>同上理由，建议每个使用Mopub的工程都加入<code>multiDexEnabled true</code>。</p>
+</li>
+<li><p>当然如果构建时出现dex file can not exceed 65536的问题也可以通过加入这条配置解决。</p>
+</li>
+<li><p>同样启用 Custom Main Gradle,添加该配置，如下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">android&#123;</span><br><span class="line">    defaultConfig&#123;</span><br><span class="line">    	...</span><br><span class="line">    	minSdkVersion **MINSDKVERSION**</span><br><span class="line">    	targetSdkVersion **TARGETSDKVERISON**</span><br><span class="line">    	...</span><br><span class="line">    	multiDexEnabled true</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li>即使没有使用Mopub而用了如Facebook，Firebase等需要通过Google External Pakage Manager添加依赖的插件，也建议启动Custom Main Gradle，它会使用安卓的implementation方法而不是每次在更新SDK或改包名时重新下载所有依赖库。</li>
+</ul>
+<h3 id="Facebook-Settings相关问题"><a href="#Facebook-Settings相关问题" class="headerlink" title="Facebook Settings相关问题"></a>Facebook Settings相关问题</h3><ul>
+<li>需配置facebook id和游戏名。</li>
+<li>missing android debug key，使用<code>keytool -exportcert -alias androiddebugkey -keystore %HOMEPATH%\.android\debug.keystore | openssl sha1 -binary | openssl base64</code>命令生成一个debug keystore。</li>
+<li>sdk not found，新版的Unity都可以通过Unity Hub下载对应版本的安卓sdk，一般不会出错，这里只要手动设置一下Hub下载的sdk就可以了，不行就重启Unity一遍。</li>
+<li>OpenSSL Not Found：<a target="_blank" rel="noopener" href="http://slproweb.com/products/Win32OpenSSL.html">下载地址</a>，配置Path环境变量，如<code>C:\Program Filed\OpenSSL-Win64\bin</code>，可能需要重启电脑。</li>
+</ul>
+<h3 id="闪退"><a href="#闪退" class="headerlink" title="闪退"></a>闪退</h3><ul>
+<li><p>一般都是因为包里有Google Service但没有配置Google Id，在Android Manifest中加入即可</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span> </span></span><br><span class="line"><span class="tag">               <span class="attr">android:name</span>=<span class="string">&quot;com.google.android.gms.ads.APPLICATIONID&quot;</span> </span></span><br><span class="line"><span class="tag">               <span class="attr">android:value</span>=<span class="string">&quot;YOUR-ID&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+</li>
+</ul>
+<h2 id="安卓上架问题"><a href="#安卓上架问题" class="headerlink" title="安卓上架问题"></a>安卓上架问题</h2><ul>
+<li>Google Play自2021.8起就强制要求上传aab包，同时TargetAPILevel要大于等于30。</li>
+<li>每次上传时记得改Version Code。</li>
+<li>Android Manifest文件中debuggable设为false。</li>
+</ul>
+<h2 id="iOS构建问题"><a href="#iOS构建问题" class="headerlink" title="iOS构建问题"></a>iOS构建问题</h2><ul>
+<li>新版本的facebook sdk要求在Xcode-&gt;UnityFramework中加入GameKit.framework。</li>
+<li>unity打包至Xcode时有时出现Cocoapods installation failed报错导致无法出现xcode.workspace文件，这一般是因为工程内的sdk找不到对应版本的构建工具，这时将所有sdk和cocoapods升级至最新是最简单的解决办法。</li>
+</ul>
+<h2 id="共有问题"><a href="#共有问题" class="headerlink" title="共有问题"></a>共有问题</h2><ul>
+<li>无论是安卓或iOS都有可能出现构建时的各种奇怪的错误，我已浪费了大量的时间google这些报错，但能由此找到解决方案的十中有一两个吧。大部分问题的起因就是更新了某个东西（Unity，构建工具，sdk等）导致这玩意和其他东西对不上了，全部更新一下就好。当然为了排除更多的可能性，遇到问题还是先网上搜一下比较好，这里推荐官网或官方的github issue，StackOverFlow等网站随便看一下就好了。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/30/Movement02-Physics/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -183,8 +298,17 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-09 23:50:02" itemprop="dateModified" datetime="2020-09-09T23:50:02+08:00">2020-09-09</time>
+                <time title="修改时间：2021-08-25 22:25:18" itemprop="dateModified" datetime="2021-08-25T22:25:18+08:00">2021-08-25</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CatlikeCoding%E7%BF%BB%E8%AF%91/" itemprop="url" rel="index"><span itemprop="name">CatlikeCoding翻译</span></a>
+                </span>
+            </span>
 
           
 
@@ -538,15 +662,19 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
