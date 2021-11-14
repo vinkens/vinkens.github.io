@@ -27,24 +27,24 @@
 <meta property="og:site_name" content="Kelvin&#39;s Blog">
 <meta property="og:description" content="PNP讨论的是一个封闭几何体是否包含另一个几何体，其中P可以指代point ,polygon，polyhedron。本文将在Unity中实现检测点P是否在一个多边形内部。 虽然可以直接给出普适性的方法，但在实际应用中还是会遇到检测点在矩形内部这种特殊的情况，所以我们可以先从简单的开始。 Point In Rectangle 点P在多边形内部  可以直接给出代码 123456789101112pub">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/point-in-rectangle.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/point-in-bounding-rect.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/crossing-number.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/cn-situations.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/Winding_Number_Animation_Small.gif">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cpoint-in-rectangle.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cpoint-in-bounding-rect.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Ccrossing-number.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Ccn-situations.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5CWinding_Number_Animation_Small.gif">
 <meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source/_posts/PNP-Unity实现-Point-In-Polygon.assets/wn1.png">
 <meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source/_posts/PNP-Unity实现-Point-In-Polygon.assets/wn2.png">
 <meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source/_posts/PNP-Unity实现-Point-In-Polygon.assets/wn3.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/wn-test.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/upward-crossing.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/downward-crossing.png">
-<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/for-convex-polygon.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cwn-test.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cupward-crossing.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cdownward-crossing.png">
+<meta property="og:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cfor-convex-polygon.png">
 <meta property="article:published_time" content="2021-11-14T06:24:00.000Z">
-<meta property="article:modified_time" content="2021-11-14T13:49:59.528Z">
+<meta property="article:modified_time" content="2021-11-14T14:23:47.019Z">
 <meta property="article:author" content="尽量不秃头的凯文">
 <meta property="article:tag" content="图形">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog/source_posts/PNP-Unity实现-Point-In-Polygon/point-in-rectangle.png">
+<meta name="twitter:image" content="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cpoint-in-rectangle.png">
 
 <link rel="canonical" href="http://yoursite.com/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/">
 
@@ -193,7 +193,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-11-14 14:24:00 / 修改时间：21:49:59" itemprop="dateCreated datePublished" datetime="2021-11-14T14:24:00+08:00">2021-11-14</time>
+              <time title="创建时间：2021-11-14 14:24:00 / 修改时间：22:23:47" itemprop="dateCreated datePublished" datetime="2021-11-14T14:24:00+08:00">2021-11-14</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,14 +218,14 @@
       
         <p>PNP讨论的是一个封闭几何体是否包含另一个几何体，其中P可以指代point ,polygon，polyhedron。本文将在Unity中实现检测点P是否在一个多边形内部。</p>
 <p>虽然可以直接给出普适性的方法，但在实际应用中还是会遇到检测点在矩形内部这种特殊的情况，所以我们可以先从简单的开始。</p>
-<h1 id="Point-In-Rectangle"><a href="#Point-In-Rectangle" class="headerlink" title="Point In Rectangle"></a>Point In Rectangle</h1><p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\point-in-rectangle.png" alt="point-in-rectangle"></p>
+<h1 id="Point-In-Rectangle"><a href="#Point-In-Rectangle" class="headerlink" title="Point In Rectangle"></a>Point In Rectangle</h1><p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cpoint-in-rectangle.png" alt="point-in-rectangle"></p>
 <center>点P在多边形内部</center>
 
 <p>可以直接给出代码</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">PointInRect</span>(<span class="params">Vector2 point, Rect rect</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> point.x &gt;= rect.xMin </span><br><span class="line">            &amp;&amp; point.x &lt;= rect.xMax </span><br><span class="line">            &amp;&amp; point.y &gt;= rect.yMin </span><br><span class="line">            &amp;&amp; point.y &lt;= rect.yMax;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">struct</span> Rectangle</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Vector2[] points;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>当矩形发生旋转时，以上方法便不再适用。当然，为了先排除部分点不在矩形内的情况，可以先判断矩形是否在多边形的包围盒内部（为了和3D的<em>BoundingBox</em>区分，此处使用<em>BoundingRect</em> ）。</p>
-<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\point-in-bounding-rect.png" alt="point-in-bounding-rect"></p>
+<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cpoint-in-bounding-rect.png" alt="point-in-bounding-rect"></p>
 <center>包围盒ABCD</center>
 
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Rect <span class="title">GetBoudingRect</span>(<span class="params">Vector2[] points</span>)</span></span><br><span class="line"><span class="function"></span>   &#123;</span><br><span class="line">       <span class="keyword">float</span> xMim = <span class="keyword">float</span>.MaxValue;</span><br><span class="line">       <span class="keyword">float</span> xMax = <span class="keyword">float</span>.MinValue;</span><br><span class="line">       <span class="keyword">float</span> yMim = <span class="keyword">float</span>.MaxValue;</span><br><span class="line">       <span class="keyword">float</span> yMax = <span class="keyword">float</span>.MinValue;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; points.Length; i++)</span><br><span class="line">       &#123;</span><br><span class="line">           Vector2 p = points[i];</span><br><span class="line">           <span class="keyword">if</span> (p.x &lt; xMim) xMim = p.x;</span><br><span class="line">           <span class="keyword">if</span> (p.x &gt; xMax) xMax = p.x;</span><br><span class="line">           <span class="keyword">if</span> (p.y &lt; yMim) yMim = p.y;</span><br><span class="line">           <span class="keyword">if</span> (p.y &lt; yMax) yMax = p.y;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">float</span> width = xMax - xMim;</span><br><span class="line">       <span class="keyword">float</span> height = yMax - yMim;</span><br><span class="line">       <span class="keyword">float</span> centerX = width * <span class="number">0.5f</span> + xMim;</span><br><span class="line">       <span class="keyword">float</span> centerY = height * <span class="number">0.5f</span> + yMim;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> Rect(centerX, centerY, width, height);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">PointInBoundingRect</span>(<span class="params">Vector2 point, Rect boundingRect</span>)</span></span><br><span class="line"><span class="function"></span>   &#123;</span><br><span class="line">       <span class="keyword">return</span> point.x &gt;= boundingRect.xMin </span><br><span class="line">           &amp;&amp; point.x &lt;= boundingRect.xMax </span><br><span class="line">           &amp;&amp; point.y &gt;= boundingRect.yMin </span><br><span class="line">           &amp;&amp; point.y &lt;= boundingRect.yMax;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
@@ -234,11 +234,11 @@
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">PointInRectangle</span>(<span class="params">Vector2 point, Rectangle rectangle</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!PointInBoundingRect(point, GetBoudingRect(rectangle.points)))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">float</span>[] dists = <span class="keyword">new</span> <span class="keyword">float</span>[<span class="number">4</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)<span class="comment">//求出点P到各边的距离dist</span></span><br><span class="line">        &#123;</span><br><span class="line">            Segment line = <span class="keyword">new</span> Segment() &#123; point1 = rectangle.points[i], point2 = rectangle.points[(i + <span class="number">1</span>) % <span class="number">4</span>] &#125;;</span><br><span class="line">            dists[i] = P2LDistance(point, line);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++)<span class="comment">//判断dist是否大于对应边的长度</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">float</span> maxDist = Vector2.Distance(rectangle.points[i], rectangle.points[i + <span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">if</span> (dists[i] &gt;= maxDist) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span> (dists[i + <span class="number">2</span>] &gt;= maxDist) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">float</span> <span class="title">P2LDistance</span>(<span class="params">Vector2 point, Segment line</span>)<span class="comment">//向量点乘法</span></span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Vector2 vec1 = point - line.point1;</span><br><span class="line">        Vector2 vec2 = line.point2 - line.point1;</span><br><span class="line">        Vector2 lineDir = vec2.normalized;</span><br><span class="line">        <span class="keyword">float</span> dotResult = Vector2.Dot(vec1, lineDir);<span class="comment">//点乘结果即为投影向量长度</span></span><br><span class="line"></span><br><span class="line">        Vector2 projectPoint = lineDir * dotResult + line.point1;</span><br><span class="line">        <span class="keyword">return</span> Vector2.Distance(projectPoint, point);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="Crossing-Number-Algorithm"><a href="#Crossing-Number-Algorithm" class="headerlink" title="Crossing Number Algorithm"></a>Crossing Number Algorithm</h1><p>从点P向任意方向发射一条射线：若点P在多边形内部，穿过的次序总是为in&gt;out…&gt;in&gt;out，即射线与多边形的交点数（cn）为奇数；若点P在多边形外部，穿过的次序总是为out&gt;in…&gt;in&gt;out，即射线与多边形的交点数（cn）为偶数。</p>
-<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\crossing-number.png" alt="crossing-number"></p>
+<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Ccrossing-number.png" alt="crossing-number"></p>
 <center style="color:#C0C0C0;text-decoration:underline">crossing number</center>
 
 <p>在实际应用时，可能会出现以下特殊情况，这时要判断这些交点是否改变了结果的奇偶性。</p>
-<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\cn-situations.png" alt="cn-situations"></p>
+<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Ccn-situations.png" alt="cn-situations"></p>
 <center style="color:#C0C0C0;text-decoration:underline">射线穿过线段交点或与线段共线</center>
 
 <p>另外一个特殊点在于，当点在两个多边形的共边上时，要判断这个点处于哪个多边形上。通常认定如果点在多边形的左边或下边，那P在多边形内；若点在多边形的右边或上边，那点P在多边形外。这样的“约定”避免了因点同时处于两个多边形上而导致的一些问题。</p>
@@ -255,7 +255,7 @@
 
 <p>需要注意的是Rule 1和Rule 2的测试已经排除了共线的情况（Rule 3）。</p>
 <p>然而，该算法的可行性是基于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%8B%A5%E5%B0%94%E5%BD%93%E6%9B%B2%E7%BA%BF%E5%AE%9A%E7%90%86">Jordan Curve Theorem</a>，该定理表明，一条简单闭曲线<br>（非自交）将平面分为内部和外部两个部分。在处理自交曲线的情况时，因为多边形把平面分为多个部分，射线穿越边界时不能正确地改变奇偶性，也就无法得出准确的结果。</p>
-<h1 id="Winding-Number-Algorithm"><a href="#Winding-Number-Algorithm" class="headerlink" title="Winding Number Algorithm"></a>Winding Number Algorithm</h1><p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\Winding_Number_Animation_Small.gif" alt="Winding_Number_Animation_Small"></p>
+<h1 id="Winding-Number-Algorithm"><a href="#Winding-Number-Algorithm" class="headerlink" title="Winding Number Algorithm"></a>Winding Number Algorithm</h1><p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5CWinding_Number_Animation_Small.gif" alt="Winding_Number_Animation_Small"></p>
 <center style="color:#C0C0C0;text-decoration:underline">winding number</center>
 
 <p>winding number算法能准确地判断点是否在非简单（自交）多边形内。它主要计算多边形环绕了点多少次（wn），如果wn非0，那么点在多边形内。下图钟图1的wn=1；图2的wn=0；图三的wn=2。</p>
@@ -270,7 +270,7 @@
 <center style="color:#C0C0C0;text-decoration:underline">几种winding number的情况</center>
 
 <p>从P点向任意方向发射一条射线——为了方便计算，测试射线通常为从点P出发，x方向的射线——想象一下，如果一个封闭凸多边形环绕了点P一次，射线就会穿过一次，而环绕n次就会穿过n次，所以最终的wn可以通过计算射线与多边形的交点得出：wn初始为0；边从下向上（upward）穿过射线则wn+1；边从上向下(downward)穿过射线则wn-1。</p>
-<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\wn-test.png" alt="wn-test"></p>
+<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cwn-test.png" alt="wn-test"></p>
 <center>wn变化规则</center>
 
 <p>与cn不同的是，wn可以小于0，这是因为有逆时针环绕和顺时针环绕的情况存在。</p>
@@ -284,8 +284,8 @@
 <li>如果点P在射线与upward edge的交点的左边，那就是逆时针穿过，wn+1;</li>
 <li>如果点P在射线与downward edge的交点的左边，那就是顺时针穿过，wn-1;</li>
 </ul>
-<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\upward-crossing.png" alt="upward-crossing"></p>
-<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\downward-crossing.png" alt="downward-crossing"></p>
+<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cupward-crossing.png" alt="upward-crossing"></p>
+<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cdownward-crossing.png" alt="downward-crossing"></p>
  <center>upward and downward crossing</center>
 
 <p>代码实现如下</p>
@@ -294,7 +294,7 @@
 <p>需要注意的是，如果点P在多边形边上，wn不认为点P在多边形内部。</p>
 <h1 id="对凸多边形和简单多边形的优化"><a href="#对凸多边形和简单多边形的优化" class="headerlink" title="对凸多边形和简单多边形的优化"></a>对凸多边形和简单多边形的优化</h1><p>以y方向的简单多边形（横线与多边形的交点最大为2）为例，可以以y最大顶点和y最小顶点为轴，将多边形分为两个部分：y递增的边集和y递减的边集。如果yMax和yMin都小于P的y值，那说明点P在多边形外（包围盒外）。</p>
 <p>对于这种已经排好序的集合，可以用二分法较快地找到需要测试的边，算法复杂度就从O(n)下降到了O(log <sub>n</sub>)。如下图，仅A<sub>1</sub>,A<sub>2</sub>,B<sub>1</sub>,B<sub>2</sub>,B<sub>3</sub>所代表的边需要进行检测。</p>
-<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/Blog\source_posts\PNP-Unity实现-Point-In-Polygon\for-convex-polygon.png" alt="for-convex-polygon"></p>
+<p><img src="/2021/11/14/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon/PNP-Unity%E5%AE%9E%E7%8E%B0-Point-In-Polygon%5Cfor-convex-polygon.png" alt="for-convex-polygon"></p>
 <center>二分法查找</center>
 
 <p>该方法同样也适用于凸多边形和在某一方向上简单的多边形，对于后者，需要先找出其在哪一方向上简单，然后把从检测射线方向调整为该方向向量的法线方向即可。</p>
